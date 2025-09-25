@@ -14,11 +14,13 @@ const app = express(); // 👈 esta línea debe ir antes de usar `app`
 app.use(cors());
 app.use(bodyParser.json());
 
-// Servir frontend Angular desde /public
-app.use(express.static(path.join(__dirname, 'public')));
-app.get('*', function(req, res) {
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api')) {
+    return next(); // deja pasar las rutas API
+  }
   res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
 });
+
 
 
 
